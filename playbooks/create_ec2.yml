@@ -1,17 +1,22 @@
 # playbooks/create_ec2.yml
+
 ---
 - name: Launch EC2 Instance
   hosts: localhost
   gather_facts: no
   tasks:
-    - name: Launch single instance
-      ec2:
+    - name: Launch an EC2 instance
+      ec2_instance:
+        name: "wp-server-aws-linux-dev"
         key_name: aws-key-pair
         instance_type: t2.micro
-        image: ami-123456 # replace with actual AMI ID
-        wait: yes
-        group: webserver # Security group name
-        count: 1
-        vpc_subnet_id: subnet-123456 # replace with actual subnet ID
-        assign_public_ip: yes
-      register: ec2
+        image_id: ami-0427090fd1714168b
+        wait: true
+        vpc_subnet_id: subnet-02374bad12aec5ad1
+        # Define network interfaces
+        network:
+          #vpc_subnet_id: subnet-02374bad12aec5ad1
+          assign_public_ip: yes
+        # Specify additional EC2 settings
+        security_group: sg-0af25a39fc7778f9b
+      #register: instance
