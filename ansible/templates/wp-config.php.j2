@@ -6,10 +6,6 @@ define( 'DB_HOST', '{{ db_host }}' );
 define( 'DB_CHARSET', 'utf8' );
 define( 'DB_COLLATE', '' );
 
-{% raw %}
-{{ lookup('url', 'https://api.wordpress.org/secret-key/1.1/salt/') }}
-{% endraw %}
-
 $table_prefix = 'wp_';
 
 define( 'WP_DEBUG', false );

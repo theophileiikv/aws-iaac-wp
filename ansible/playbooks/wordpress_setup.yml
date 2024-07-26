@@ -2,44 +2,20 @@
 ---
 - hosts: webservers
   become: yes
-  gather_facts: no
-  
-
-  
   vars:
-    ansible_python_interpreter: /usr/bin/python3
     db_name: "{{ lookup('env', 'DB_NAME') }}"
     db_user: "{{ lookup('env', 'DB_USER') }}"
     db_password: "{{ lookup('env', 'DB_PASSWORD') }}"
     db_host: "{{ lookup('env', 'DB_HOST') }}"
 
   tasks:
-    - name: Install python3-libdnf5
+    - name: Install required packages
       dnf:
         name:
-          - python3-libdnf5
-        use_backend: dnf4
-    - name: Debug - Print ansible facts
-      debug:
-        msg: 
-          - "Distribution: {{ ansible_distribution }}"
-          - "Distribution version: {{ ansible_distribution_version }}"
-          - "Package manager: {{ ansible_pkg_mgr }}"
-    
-    #- name: Enable Amazon Linux Extras repository
-    #  command: amazon-linux-extras enable php7.4
-    #  become: yes
-
-    - name: Install required packages
-      ansible.builtin.dnf5:
-        name:
-          - python3-libdnf5
           - httpd
           - php
           - php-mysqlnd
         state: present
-        #use_backend: dnf5
-      become: yes
 
     - name: Start and enable Apache
       systemd:
@@ -60,7 +36,7 @@
 
     - name: Configure WordPress
       template:
-        src: wp-config.php.j2
+        src: ../templates/wp-config.php.j2
         dest: /var/www/html/wordpress/wp-config.php
 
     - name: Set permissions
